@@ -1,0 +1,21 @@
+ethereum_rpc = "https://rpc.hoodi.ethpandaops.io"
+drosera_rpc = "https://relay.hoodi.drosera.io"
+eth_chain_id = 560048
+drosera_address = "0x91cB447BaFc6e0EA0F4Fe056F5a9b1F14bb06e5D"
+
+[traps]
+
+[traps.price_spike_alert]
+path = "out/PriceSpikeAlert.sol/PriceSpikeAlert.json"
+response_contract = "0x490c5D67e708Cb138Ba8a60B074DC4309DB3aCcc"
+response_function = "respondCallback(uint256)"
+cooldown_period_blocks = 33
+min_number_of_operators = 1
+max_number_of_operators = 2
+block_sample_size = 10
+private_trap = true
+whitelist = ["0x1669c6df6f47236aeddfc4197645c67ac80be2e0"]
+
+[operator]
+external_p2p_address = "/ip4/0.0.0.0/tcp/9090"
+eth_private_key = "c9b42ecb04e13670bbce7da5fb70814cf6a132ca21e72d491e630970c3f7ab51"

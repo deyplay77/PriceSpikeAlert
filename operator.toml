@@ -1,0 +1,4 @@
+[operator]
+external_p2p_address = "/ip4/0.0.0.0/tcp/9090"
+eth_private_key = "c9b42ecb04e13670bbce7da5fb70814cf6a132ca21e72d491e630970c3f7ab51"
+eth_rpc_url = "https://rpc.hoodi.ethpandaops.io"
