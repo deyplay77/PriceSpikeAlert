@@ -12,10 +12,6 @@ response_function = "respondCallback(uint256)"
 cooldown_period_blocks = 33
 min_number_of_operators = 1
 max_number_of_operators = 2
-block_sample_size = 10
+block_sample_size = 2
 private_trap = true
 whitelist = ["0x1669c6df6f47236aeddfc4197645c67ac80be2e0"]
-
-[operator]
-external_p2p_address = "/ip4/0.0.0.0/tcp/9090"
-eth_private_key = "c9b42ecb04e13670bbce7da5fb70814cf6a132ca21e72d491e630970c3f7ab51"
