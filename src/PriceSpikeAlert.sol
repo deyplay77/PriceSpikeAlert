@@ -8,31 +8,42 @@ contract PriceSpikeAlert is ITrap {
 
     constructor() {}
 
-    function collect() external pure override returns (bytes memory) {
+    // 🔧 FIX 1: Changed from 'pure' to 'view' (matches ITrap interface exactly)
+    function collect() external view override returns (bytes memory) {
         // PoC: Return a single uint256 price value
-        // In production, replace with real oracle/AMM price call
+        // NOTE: For real spike detection, replace with oracle/AMM price call
         uint256 currentPrice = 100; // Example price in appropriate units (1e18)
         return abi.encode(currentPrice);
     }
 
     function shouldRespond(bytes[] calldata data) external pure override returns (bool, bytes memory) {
-        // 1. Planner-safety guards
-        require(data.length >= 2, "Insufficient data samples");
-        require(data[0].length > 0 && data[1].length > 0, "Empty data blobs");
+        // 🔧 FIX 2: Replace require() with graceful returns (prevents trap execution failures)
         
-        // 2. Compare data[0] (newest) vs data[1] (previous) - NOT data[data.length-1]
+        // Check if we have enough data samples
+        if (data.length < 2) {
+            return (false, abi.encode(uint256(0)));
+        }
+        
+        // Check if data blobs are non-empty
+        if (data[0].length == 0 || data[1].length == 0) {
+            return (false, abi.encode(uint256(0)));
+        }
+        
+        // Compare data[0] (newest) vs data[1] (previous)
         uint256 currentPrice = abi.decode(data[0], (uint256));
         uint256 previousPrice = abi.decode(data[1], (uint256));
         
-        // 3. Division-by-zero guard
-        require(previousPrice > 0, "Previous price cannot be zero");
+        // 🔧 FIX 2: Graceful return for zero price instead of require()
+        if (previousPrice == 0) {
+            return (false, abi.encode(uint256(0)));
+        }
         
-        // 4. Calculate percentage change
+        // Calculate percentage change
         if (currentPrice > previousPrice) {
             uint256 priceIncrease = currentPrice - previousPrice;
             uint256 priceChangePercent = (priceIncrease * 100) / previousPrice;
             
-            // 5. Return uint256 payload (price change percentage) to match responder
+            // Return uint256 payload (price change percentage) to match responder
             if (priceChangePercent > SPIKE_THRESHOLD) {
                 return (true, abi.encode(priceChangePercent));
             }
@@ -42,4 +53,3 @@ contract PriceSpikeAlert is ITrap {
         return (false, abi.encode(uint256(0)));
     }
 }
-
